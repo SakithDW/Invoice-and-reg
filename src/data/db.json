@@ -1,0 +1,106 @@
+{
+  "products": [
+    {
+      "price": 200,
+      "category": "sports",
+      "status": true
+    },
+    {
+      "price": 150,
+      "category": "electronics",
+      "status": false
+    },
+    {
+      "price": 300,
+      "category": "fashion",
+      "status": true
+    },
+    {
+      "price": 400,
+      "category": "home",
+      "status": true
+    },
+    {
+      "price": 250,
+      "category": "toys",
+      "status": false
+    },
+    {
+      "price": 100,
+      "category": "books",
+      "status": true
+    },
+    {
+      "price": 350,
+      "category": "beauty",
+      "status": true
+    },
+    {
+      "price": 450,
+      "category": "automotive",
+      "status": false
+    },
+    {
+      "price": 500,
+      "category": "health",
+      "status": true
+    },
+    {
+      "price": 550,
+      "category": "garden",
+      "status": false
+    }
+  ],
+  "sales": [
+    {
+      "year": 2015,
+      "amount": 5000,
+      "colorcode": "green"
+    },
+    {
+      "year": 2016,
+      "amount": 6000,
+      "colorcode": "yellow"
+    },
+    {
+      "year": 2017,
+      "amount": 2000,
+      "colorcode": "red"
+    },
+    {
+      "year": 2018,
+      "amount": 7000,
+      "colorcode": "blue"
+    },
+    {
+      "year": 2019,
+      "amount": 8000,
+      "colorcode": "purple"
+    },
+    {
+      "year": 2020,
+      "amount": 9000,
+      "colorcode": "orange"
+    },
+    {
+      "year": 2021,
+      "amount": 10000,
+      "colorcode": "pink"
+    },
+    {
+      "year": 2022,
+      "amount": 11000,
+      "colorcode": "brown"
+    },
+    {
+      "year": 2023,
+      "amount": 12000,
+      "colorcode": "black"
+    },
+    {
+      "year": 2024,
+      "amount": 13000,
+      "colorcode": "goldenrod"
+    }
+  ]
+}

@@ -1,0 +1,295 @@
+<div class="ml-5 mr-5 mt-2">
+  <h1 class="flex justify-center">Invoice</h1>
+  <div id="invoice">
+    <Form [formGroup]="rec">
+      <div class="flex justify-center">
+        <div class="w-[50%]">
+          <div class="flex pt-2 pb-2">
+            <label for="InvId" class="font-bold h-4 mt-1">Invoice Id -</label>
+            <div class="flex w-1/6 justify-around ml-10 text-xl font-bold">
+              <input formControlName="invId" readonly />
+            </div>
+          </div>
+          <div>
+            <label for="from" class="font-bold h-4 mt-3">Who's this from</label>
+            <input
+              type="text"
+              class="w-full p-1 border-2 rounded-sm mt-2"
+              formControlName="from"
+              [matAutocomplete]="autoFrom"
+            />
+            <mat-autocomplete
+              #autoFrom="matAutocomplete"
+              (optionSelected)="onContactSelected($event)"
+            >
+              <mat-option
+                *ngFor="let contact of filteredContacts"
+                [value]="contact.name"
+              >
+                {{ contact.name }}
+              </mat-option>
+            </mat-autocomplete>
+          </div>
+          <div>
+            <label for="billTo" class="font-bold h-4 mt-3">Bill To</label>
+            <input
+              type="text"
+              class="w-full p-1 border-2 rounded-sm"
+              formControlName="billTo"
+            />
+          </div>
+        </div>
+        <div class="w-[30%] mt-14">
+          <div class="w-full flex flex-col items-end">
+            <div class="w-[80%]">
+              <label for="date" class="font-bold h-4">Date</label>
+              <input
+                type="date"
+                class="w-full p-1 border-2 rounded-sm mt-2"
+                formControlName="date"
+              />
+            </div>
+            <div class="w-[80%] mt-3">
+              <label for="dueDate" class="font-bold h-4">Due Date</label>
+              <input
+                type="date"
+                class="w-full p-1 border-2 rounded-sm mt-2"
+                formControlName="dueDate"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-5xl mx-auto mt-10 p-6">
+        <div class="flex bg-slate-800 text-white text-sm font-medium p-2">
+          <div class="w-6/12">Item</div>
+          <div class="w-1/12 text-center">Quantity</div>
+          <div class="w-1/6 text-center">Rate</div>
+          <div class="w-1/12 text-center">Discount</div>
+          <div class="w-1/6 text-center">Amount</div>
+        </div>
+
+        <div formArrayName="lineItems">
+          <div
+            *ngFor="let item of lineItems.controls; let i = index"
+            [formGroupName]="i"
+            class="flex items-center border-b border-gray-300 p-2"
+          >
+            <input
+              type="text"
+              formControlName="product"
+              (focus)="filterProducts(i)"
+              class="w-6/12 p-1 border border-gray-300 rounded"
+              placeholder="Product/Service Name"
+              [matAutocomplete]="auto"
+            />
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              (optionSelected)="onProductSelected($event, i)"
+            >
+              <mat-option
+                *ngFor="let product of filteredProducts"
+                [value]="product.name"
+              >
+                {{ product.name }}
+              </mat-option>
+            </mat-autocomplete>
+            <input
+              formControlName="quantity"
+              (change)="calculateAmount(i); updateSubtotal()"
+              type="number"
+              class="w-1/12 text-right p-1 border border-gray-300 rounded mx-1"
+            />
+            <div class="flex items-center w-1/6">
+              <span>$</span>
+              <input
+                (change)="calculateAmount(i); updateSubtotal()"
+                formControlName="rate"
+                type="number"
+                class="w-full p-1 border border-gray-300 rounded ml- text-right"
+              />
+            </div>
+            <input
+              formControlName="itemDiscount"
+              (change)="calculateAmount(i); updateSubtotal()"
+              type="number"
+              class="w-1/12 text-right p-1 border border-gray-300 rounded mx-1"
+            />
+            <span>%</span>
+
+            <div class="flex w-1/6 flex-end">
+              <input
+                class="text-right"
+                formControlName="amount"
+                type="number"
+                placeholder="$ 0.00"
+              />
+              <div (click)="removeLineItem(i)">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  x="0px"
+                  y="0px"
+                  width="23"
+                  height="23"
+                  viewBox="0,0,256,256"
+                >
+                  <g
+                    fill-opacity="0.98824"
+                    fill="#050242"
+                    fill-rule="nonzero"
+                    stroke="none"
+                    stroke-width="1"
+                    stroke-linecap="butt"
+                    stroke-linejoin="miter"
+                    stroke-miterlimit="10"
+                    stroke-dasharray=""
+                    stroke-dashoffset="0"
+                    font-family="none"
+                    font-weight="none"
+                    font-size="none"
+                    text-anchor="none"
+                    style="mix-blend-mode: normal"
+                  >
+                    <g transform="scale(5.12,5.12)">
+                      <path
+                        d="M25,2c-12.69047,0 -23,10.30953 -23,23c0,12.69047 10.30953,23 23,23c12.69047,0 23,-10.30953 23,-23c0,-12.69047 -10.30953,-23 -23,-23zM25,4c11.60953,0 21,9.39047 21,21c0,11.60953 -9.39047,21 -21,21c-11.60953,0 -21,-9.39047 -21,-21c0,-11.60953 9.39047,-21 21,-21zM32.99023,15.98633c-0.26377,0.00624 -0.51439,0.11645 -0.69727,0.30664l-7.29297,7.29297l-7.29297,-7.29297c-0.18827,-0.19353 -0.4468,-0.30272 -0.7168,-0.30274c-0.40692,0.00011 -0.77321,0.24676 -0.92633,0.62377c-0.15312,0.37701 -0.06255,0.80921 0.22907,1.09303l7.29297,7.29297l-7.29297,7.29297c-0.26124,0.25082 -0.36648,0.62327 -0.27512,0.97371c0.09136,0.35044 0.36503,0.62411 0.71547,0.71547c0.35044,0.09136 0.72289,-0.01388 0.97371,-0.27512l7.29297,-7.29297l7.29297,7.29297c0.25082,0.26124 0.62327,0.36648 0.97371,0.27512c0.35044,-0.09136 0.62411,-0.36503 0.71547,-0.71547c0.09136,-0.35044 -0.01388,-0.72289 -0.27512,-0.97371l-7.29297,-7.29297l7.29297,-7.29297c0.29724,-0.28583 0.38857,-0.7248 0.23,-1.10546c-0.15857,-0.38066 -0.53454,-0.62497 -0.94679,-0.61524z"
+                      ></path>
+                    </g>
+                  </g>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button
+          class="mt-2 text-green-500 font-medium text-sm"
+          (click)="addLineItem()"
+        >
+          + Line Item
+        </button>
+
+        <div class="max-w-6xl mx-auto mt-6 grid grid-cols-3 gap-4">
+          <!-- Left Side: Notes and Terms -->
+          <div class="col-span-2 space-y-4">
+            <!-- Notes Section -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1"
+                >Notes</label
+              >
+              <textarea
+                class="w-full p-2 border border-gray-300 rounded"
+                formControlName="notes"
+                placeholder="Notes - any relevant information not already covered"
+              ></textarea>
+            </div>
+
+            <!-- Terms Section -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1"
+                >Terms</label
+              >
+              <textarea
+                class="w-full p-2 border border-gray-300 rounded"
+                formControlName="terms"
+                placeholder="Terms and conditions - late fees, payment methods, delivery schedule"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Right Side: Summary -->
+          <div class="space-y-2">
+            <div class="flex justify-between">
+              <span class="text-sm text-gray-700">Subtotal</span>
+
+              <span class="text-sm text-gray-700">
+                <input
+                  type="number"
+                  formControlName="subTotal"
+                  class="text-right pr-2"
+                />
+              </span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-700">Tax</span>
+              <div class="flex items-center space-x-2">
+                <input
+                  type="number"
+                  formControlName="tax"
+                  (change)="updateSubtotal()"
+                  class="w-12 p-1 border border-gray-300 rounded text-right"
+                  value="0"
+                />
+                <span class="text-sm text-gray-700">%</span>
+              </div>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-700">Discount</span>
+              <div class="flex items-center space-x-2">
+                <input
+                  type="number"
+                  formControlName="discount"
+                  (change)="updateSubtotal()"
+                  class="w-12 p-1 border border-gray-300 rounded text-center text-right"
+                  value="0"
+                />
+                <span class="text-sm text-gray-700">%</span>
+              </div>
+            </div>
+            <div class="flex justify-between items-center"></div>
+            <div class="flex justify-between">
+              <span class="text-sm text-gray-700 font-semibold">Total</span>
+              <span class="text-sm text-gray-700 font-semibold">
+                <input
+                  type="number"
+                  formControlName="total"
+                  class="text-right"
+                />
+              </span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-700">Amount Paid</span>
+              <div class="flex items-center space-x-2">
+                <span class="text-sm text-gray-700">$</span>
+                <input
+                  type="number"
+                  formControlName="amountPaid"
+                  (change)="updateSubtotal()"
+                  class="w-16 p-1 border border-gray-300 rounded text-right"
+                  value="0"
+                />
+              </div>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-sm text-gray-700 font-semibold">
+                Balance Due
+              </span>
+              <span class="text-sm text-gray-700 font-semibold">
+                <input
+                  type="number"
+                  formControlName="balanceDue"
+                  class="w-20 p-1 border border-gray-300 rounded text-right"
+                />
+              </span>
+            </div>
+            <div class="flex justify-center p-4 gap-4 rounded-lg">
+              <button
+                (click)="submitInvoice()"
+                class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105"
+              >
+                Save
+              </button>
+
+              <button
+                class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-6 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105"
+              >
+                Download<br />PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Form>
+  </div>
+</div>
