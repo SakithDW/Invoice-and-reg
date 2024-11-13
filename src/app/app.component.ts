@@ -22,7 +22,7 @@ const routes: Routes = [
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, LoginComponent, RouterModule, LayoutComponent, CommonModule, RegisterComponent, FooterComponent],
+  imports: [RouterOutlet, RouterModule, CommonModule,LayoutComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
